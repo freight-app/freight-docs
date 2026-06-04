@@ -1,0 +1,18 @@
+$ freight init hello
+created package hello
+wrote freight.toml
+
+$ cd hello
+
+$ freight add zlib
+added zlib = "latest" to freight.toml
+
+$ freight fetch
+resolved 1 package
+downloaded zlib
+cached sources in .pkgs/zlib
+
+$ freight build --release
+compiling hello
+linking target/release/hello
+finished release build

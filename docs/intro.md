@@ -24,6 +24,8 @@ freight build
 freight run
 ```
 
+The terminal demos are reproducible. See [Terminal demos](./terminal-demos.md) for the VHS tapes, asciinema recordings, and text transcripts used in this guide.
+
 ## Dependencies
 
 Dependencies can come from the registry, local paths, Git repositories, or URL archives. Registry dependencies are cached under `.pkgs/`; compiled artifacts stay under `target/`.

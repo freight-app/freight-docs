@@ -4,7 +4,7 @@ const sidebars = {
       type: 'category',
       label: 'Start',
       collapsed: false,
-      items: ['intro', 'install'],
+      items: ['intro', 'install', 'terminal-demos'],
     },
     {
       type: 'category',

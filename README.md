@@ -1,11 +1,17 @@
 # Freight registry docs
 
-The registry ecosystem guide is authored in Markdown in `docs-site/docs/`.
-Docusaurus converts those files into the static site served by the registry.
+The Freight ecosystem guide is authored in Markdown in `docs/`.
+Docusaurus converts those files into the static site published with GitHub Pages.
 
 ```sh
 bun install
 bun run build
+```
+
+Terminal examples are generated from VHS tapes and asciinema scenarios:
+
+```sh
+bun run examples:terminal
 ```
 
 The build output is written to `build/` and published through GitHub Pages.

@@ -6,7 +6,8 @@
     "start": "docusaurus start",
     "build": "docusaurus build",
     "serve": "docusaurus serve build",
-    "clear": "docusaurus clear"
+    "clear": "docusaurus clear",
+    "examples:terminal": "bash scripts/render-terminal-examples.sh"
   },
   "dependencies": {
     "@docusaurus/core": "^3.7.0",
