@@ -10,19 +10,19 @@ const sidebars = {
       type: 'category',
       label: 'Reference',
       collapsed: false,
-      items: ['freight-toml', 'config-toml'],
+      items: ['freight-toml', 'dependency-management', 'config-toml'],
     },
     {
       type: 'category',
       label: 'Tooling',
       collapsed: false,
-      items: ['dap-lsp', 'dag'],
+      items: ['build-workflow', 'dap-lsp', 'dag'],
     },
     {
       type: 'category',
       label: 'Registry',
       collapsed: false,
-      items: ['publish'],
+      items: ['install-package', 'publish'],
     },
   ],
 };

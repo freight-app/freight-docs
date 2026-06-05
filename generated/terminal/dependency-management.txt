@@ -1,0 +1,23 @@
+$ freight add fmt@10
+added fmt = "10" to freight.toml
+
+$ freight add openssl
+added openssl = "latest" to freight.toml
+
+$ freight add mathlib --path ../mathlib
+added mathlib = { path = "../mathlib" } to freight.toml
+
+$ freight fetch
+resolved 3 packages
+downloaded fmt
+downloaded openssl
+cached packages in .pkgs/
+
+$ freight tree
+hello 0.1.0
+├── fmt 10.2.1
+├── openssl 3.2.0
+└── mathlib 0.1.0 (path ../mathlib)
+
+$ freight outdated
+all dependencies are current

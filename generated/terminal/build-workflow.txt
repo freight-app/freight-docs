@@ -1,0 +1,29 @@
+$ freight check
+package  hello 0.1.0
+success  freight.toml is valid
+
+$ freight fetch
+resolved 2 packages
+cached fmt in .pkgs/fmt
+cached zlib in .pkgs/zlib
+
+$ freight build --graph
+hello 0.1.0
+├── fmt 10
+└── zlib 1
+build order: fmt, zlib, hello
+
+$ freight build --time-passes
+Building hello [dev]
+Compiling src/main.cpp
+Linking hello
+time  src/main.cpp  84ms
+finished dev build
+
+$ freight test
+test math_smoke ... ok
+test cli_smoke ... ok
+
+$ freight run -- --help
+hello 0.1.0
+usage: hello [OPTIONS]

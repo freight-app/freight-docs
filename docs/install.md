@@ -58,3 +58,9 @@ freight login --registry https://registry.example.com
 freight fetch
 freight build
 ```
+
+## Next steps
+
+- Use [Build workflow](./build-workflow.md) for the normal local compile/test/run loop.
+- Use [Dependency management](./dependency-management.md) when adding registry, path, Git, URL, system, optional, or platform-specific dependencies.
+- Use [Install and package](./install-package.md) when staging release files, creating archives, or building native installers.

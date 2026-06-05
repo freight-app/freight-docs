@@ -1,0 +1,20 @@
+$ freight build --release
+Building hello [release]
+Compiling src/main.cpp
+Linking hello
+finished release build
+
+$ freight install --prefix /usr/local --destdir target/stage --no-build
+Installing /usr/local (destdir: target/stage)
+Install (bin) target/stage/usr/local/bin/hello
+success 1 file installed
+
+$ freight package --target x86_64-linux-gnu,aarch64-linux-gnu
+Packaging hello [x86_64-linux-gnu]
+success -> target/package/hello-0.1.0-x86_64-linux.tar.gz
+Packaging hello [aarch64-linux-gnu]
+success -> target/package/hello-0.1.0-aarch64-linux.tar.gz
+
+$ freight package --installer
+Installer hello
+success -> target/package/hello-0.1.0-x86_64-linux.deb

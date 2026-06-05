@@ -9,6 +9,9 @@ Freight is the build tool, package format, registry, documentation browser, and 
 ## Core docs
 
 - [`freight.toml`](./freight-toml.md) explains project manifests, targets, features, and dependency declarations.
+- [Build workflow](./build-workflow.md) explains project discovery, profiles, build artifacts, graph output, and troubleshooting.
+- [Dependency management](./dependency-management.md) explains registry, path, Git, URL, system, optional, and platform-specific dependencies.
+- [Install and package](./install-package.md) explains `freight install`, staged installs, archives, target packaging, and native installers.
 - [`config.toml`](./config-toml.md) explains system, user, and project-local machine configuration.
 - [DAP and LSP](./dap-lsp.md) explains editor debugging and language-server integration.
 - [DAG build system](./dag.md) explains package build stages and C++20 module ordering.
@@ -24,7 +27,7 @@ freight build
 freight run
 ```
 
-The terminal demos are reproducible. See [Terminal demos](./terminal-demos.md) for the VHS tapes, asciinema recordings, and text transcripts used in this guide.
+The terminal demos are reproducible. See [Terminal demos](./terminal-demos.md) for the VHS tapes and text transcripts used in this guide.
 
 ## Dependencies
 
@@ -40,6 +43,29 @@ path = "../local-lib"
 [os.windows.dependencies]
 winapi = "0.3"
 ```
+
+See [Dependency management](./dependency-management.md) for scopes, optional deps, platform-specific sections, and source-build behavior.
+
+## Build and release workflow
+
+Local builds usually stay in the `dev` profile until release validation:
+
+```bash
+freight check
+freight fetch
+freight build --time-passes
+freight test
+freight build --release
+```
+
+Release artifacts can be installed to a prefix or packaged for distribution:
+
+```bash
+freight install --prefix /usr/local --destdir target/stage --no-build
+freight package --target x86_64-linux-gnu,aarch64-linux-gnu
+```
+
+See [Build workflow](./build-workflow.md) and [Install and package](./install-package.md) for the full flow.
 
 ## Publish and registry workflow
 
