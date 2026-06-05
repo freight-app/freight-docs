@@ -26,10 +26,14 @@ Edit these files for content changes:
 
 - `docs/intro.md`
 - `docs/install.md`
+- `docs/build-workflow.md`
+- `docs/dependency-management.md`
+- `docs/install-package.md`
 - `docs/freight-toml.md`
 - `docs/config-toml.md`
 - `docs/dap-lsp.md`
 - `docs/dag.md`
 - `docs/publish.md`
+- `docs/terminal-demos.md`
 
 Edit `sidebars.js` for navigation changes.

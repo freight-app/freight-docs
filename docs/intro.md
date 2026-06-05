@@ -6,6 +6,10 @@ slug: /
 
 Freight is the build tool, package format, registry, documentation browser, and editor integration surface for native projects.
 
+It is aimed at C, C++, Fortran, assembly, and mixed-language projects that need reproducible builds, project-local dependencies, IDE metadata, and a package registry without stitching together several unrelated tools.
+
+Freight keeps the project contract in `freight.toml`, downloads packages into `.pkgs/`, writes build output into `target/`, and generates editor metadata under `.freight/`.
+
 ## Core docs
 
 - [`freight.toml`](./freight-toml.md) explains project manifests, targets, features, and dependency declarations.
@@ -20,6 +24,16 @@ Freight is the build tool, package format, registry, documentation browser, and 
 
 A Freight project is described by `freight.toml`. Keep source layout conventional and let Freight generate the build metadata used by compilers, IDEs, and package consumers.
 
+```text
+hello/
+├── freight.toml
+├── include/
+│   └── hello/hello.h
+└── src/
+    ├── hello.cpp
+    └── main.cpp
+```
+
 ```bash
 freight init hello
 cd hello
@@ -28,6 +42,43 @@ freight run
 ```
 
 The terminal demos are reproducible. See [Terminal demos](./terminal-demos.md) for the VHS tapes and text transcripts used in this guide.
+
+## Manifest example
+
+This is a small library plus executable with C++20 enabled, a public header, a registry dependency, a local path dependency, and a Windows-only package:
+
+```toml
+[package]
+name = "hello"
+version = "0.1.0"
+license = "MIT"
+
+[lib]
+name = "hello"
+srcs = ["src/hello.cpp"]
+hdrs = ["include/hello/hello.h"]
+
+[[bin]]
+name = "hello"
+src = "src/main.cpp"
+
+[language.cpp]
+std = "c++20"
+
+[compiler]
+backend = "clang"
+warnings = "all"
+includes = ["include"]
+
+[dependencies]
+fmt = "10"
+mathlib = { path = "../mathlib" }
+
+[os.windows.dependencies]
+winapi = "0.3"
+```
+
+Run `freight check` after editing the manifest to catch invalid fields and incompatible dependency declarations before compiling.
 
 ## Dependencies
 
@@ -48,7 +99,7 @@ See [Dependency management](./dependency-management.md) for scopes, optional dep
 
 ## Build and release workflow
 
-Local builds usually stay in the `dev` profile until release validation:
+Local builds usually stay in the `dev` profile until release validation. The normal loop is check, fetch, build, test, run:
 
 ```bash
 freight check
@@ -56,6 +107,13 @@ freight fetch
 freight build --time-passes
 freight test
 freight build --release
+```
+
+Freight can also show the graph it is about to build:
+
+```bash
+freight build --graph
+freight build --graph --graph-format mermaid
 ```
 
 Release artifacts can be installed to a prefix or packaged for distribution:
@@ -78,6 +136,14 @@ freight fetch
 freight build --release
 ```
 
+For package development, publish from a clean release build and keep generated archives under `target/package/`:
+
+```bash
+freight test --release
+freight package
+freight publish --registry https://registry.example.com
+```
+
 ## Documentation
 
 `freight doc` extracts source comments into a structured symbol index. Published docs appear in the package page through the source documentation viewer, while this guide covers the ecosystem workflow.
@@ -91,3 +157,29 @@ freight publish --registry https://registry.example.com
 ## Editor support
 
 The editor extensions start `freight lsp` for `freight.toml` diagnostics, completion, hover, and source-language passthroughs. VS Code and Neovim wrappers live with the workspace; JetBrains support is planned.
+
+The VS Code extension also exposes Freight tasks and debugging:
+
+```text
+Freight: Build
+Freight: Run
+Freight: Debug
+Freight: Generate compile_commands.json
+```
+
+The generated compile database is kept in `.freight/lsp/<profile>/compile_commands.json`, so clangd sees the same explicit Freight package includes that the build uses.
+
+## Common commands
+
+| Goal | Command |
+|---|---|
+| Validate manifest | `freight check` |
+| Fetch dependencies | `freight fetch` |
+| Build debug profile | `freight build` |
+| Build release profile | `freight build --release` |
+| Run tests | `freight test` |
+| Run an executable | `freight run -- --help` |
+| Inspect dependency tree | `freight tree` |
+| Generate docs | `freight doc` |
+| Install staged files | `freight install --prefix /usr/local --destdir target/stage` |
+| Package artifacts | `freight package --target x86_64-linux-gnu,aarch64-linux-gnu` |
