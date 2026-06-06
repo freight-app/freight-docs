@@ -1,25 +1,26 @@
+%%{init: {"flowchart": {"htmlLabels": false}} }%%
 flowchart TD
   command{"Command"}
 
   install["freight install"]
   installBuild{"--no-build?"}
-  buildInstall["Run freight build<br/>selected profile/target"]
-  installOutputs["Read build outputs<br/>target/profile/"]
+  buildInstall["Run build"]
+  installOutputs["Read outputs"]
 
-  installTree["Copy files into install layout<br/>bin/ lib/ include/"]
-  prefix["Apply --prefix<br/>example: /usr/local"]
-  destdir["Optional --destdir staging root<br/>example: target/stage"]
-  installed["Installed tree<br/>DESTDIR + prefix"]
+  installTree["Copy layout<br/>bin lib include"]
+  prefix["Apply<br/>--prefix"]
+  destdir["Apply<br/>--destdir"]
+  installed["Installed tree"]
 
   package["freight package"]
-  packageBuild["Build selected package target"]
-  packageOutputs["Read package outputs<br/>target/profile/"]
-  stage["Create temporary package stage<br/>under target/package/"]
-  stageLayout["Copy files into staged layout<br/>bin/ lib/ include/"]
-  archive["Archive staged tree<br/>.tar.gz or .zip"]
+  packageBuild["Build package"]
+  packageOutputs["Read outputs"]
+  stage["Create stage"]
+  stageLayout["Copy layout<br/>to stage"]
+  archive["Create archive<br/>tar.gz / zip"]
   native{"--installer?"}
-  installer["Native installer<br/>.deb / .dmg / .exe"]
-  artifacts["Package artifacts<br/>target/package/"]
+  installer["Native<br/>installer"]
+  artifacts["target/package"]
 
   command -- "install" --> install --> installBuild
   installBuild -- "no" --> buildInstall --> installOutputs

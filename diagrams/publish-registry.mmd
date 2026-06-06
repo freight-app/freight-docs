@@ -1,26 +1,27 @@
+%%{init: {"flowchart": {"htmlLabels": false}} }%%
 flowchart TD
-  author["Package author"]
-  verify["Verify locally<br/>freight test + freight package"]
-  login["freight login<br/>registry token"]
+  author["Author"]
+  verify["Verify locally"]
+  login["freight login"]
   publish["freight publish"]
-  bundle["Create upload bundle<br/>manifest + source archive + README/docs + optional prebuilts"]
+  bundle["Bundle upload<br/>manifest + source<br/>docs + prebuilts"]
 
-  validate["Registry validates<br/>auth + ownership + version"]
-  store["Store package version"]
+  validate["Validate<br/>auth + version"]
+  store["Store version"]
 
   subgraph stored["Registry records"]
-    metadata["Manifest metadata<br/>deps/features/targets"]
-    source["Source archive"]
-    docs["README and docs index"]
-    prebuilts["Prebuilt archives<br/>by target triple"]
+    metadata["Manifest<br/>metadata"]
+    source["Source<br/>archive"]
+    docs["README<br/>and docs"]
+    prebuilts["Prebuilts<br/>by target"]
   end
 
-  consumer["Consumer project<br/>freight fetch/build"]
-  choose{"Compatible prebuilt<br/>available?"}
-  downloadPrebuilt["Download prebuilt<br/>to .pkgs/name"]
-  downloadSource["Download source<br/>to .pkgs/name"]
-  buildSource["Build source dependency<br/>target/deps/name"]
-  compile["Compile consumer package"]
+  consumer["Consumer<br/>fetch/build"]
+  choose{"Prebuilt<br/>matches?"}
+  downloadPrebuilt["Download<br/>prebuilt"]
+  downloadSource["Download<br/>source"]
+  buildSource["Build source<br/>dep"]
+  compile["Compile<br/>consumer"]
 
   author --> verify --> login --> publish --> bundle --> validate --> store
   store --> metadata

@@ -1,19 +1,20 @@
+%%{init: {"flowchart": {"htmlLabels": false}} }%%
 flowchart TD
   start["freight build"]
-  manifest["Find project<br/>read freight.toml"]
-  config["Resolve build settings<br/>profile + target + features"]
-  depGraph["Resolve dependency graph"]
-  fetch["Fetch missing packages"]
-  depbuild{"Dependency has<br/>compatible prebuilt?"}
-  sourceDeps["Build source deps<br/>target/deps/name"]
-  compileDb["Write clangd database<br/>.freight/lsp/profile/compile_commands.json"]
-  sources["Discover package targets<br/>lib + bins + tests + modules"]
-  compile["Compile translation units"]
-  link["Link libraries and executables"]
-  outputs["Build outputs<br/>target/profile/"]
-  followup["freight test / run / install<br/>use built outputs"]
+  manifest["Find project<br/>read manifest"]
+  config["Merge settings<br/>profile + target"]
+  depGraph["Resolve<br/>dep graph"]
+  fetch["Fetch missing<br/>packages"]
+  depbuild{"Prebuilt<br/>available?"}
+  sourceDeps["Build source<br/>deps"]
+  compileDb["Write clangd<br/>compile DB"]
+  sources["Discover<br/>targets"]
+  compile["Compile<br/>sources"]
+  link["Link<br/>outputs"]
+  outputs["target/profile"]
+  followup["test / run / install"]
 
-  pkgs[(".pkgs/name<br/>download cache")]
+  pkgs[(".pkgs cache")]
 
   start --> manifest --> config --> depGraph --> fetch --> pkgs --> depbuild
   depbuild -- "yes" --> sources

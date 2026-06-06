@@ -1,28 +1,29 @@
+%%{init: {"flowchart": {"htmlLabels": false}} }%%
 flowchart TD
   manifest["freight.toml"]
 
-  subgraph active["Choose active dependency edges"]
+  subgraph active["Active edges"]
     base["[dependencies]"]
     build["[build-dependencies]"]
-    dev["[dev-dependencies]<br/>tests/benches/dev tools"]
-    features["selected [features]"]
-    target["matching os/arch/compiler tables"]
+    dev["[dev-dependencies]"]
+    features["features"]
+    target["target tables"]
   end
 
-  normalize["Normalize each edge<br/>name + source + requested features"]
-  resolve["Resolve versions<br/>and feature unions"]
+  normalize["Normalize<br/>edges"]
+  resolve["Resolve versions<br/>and features"]
   source{"Source kind"}
 
-  registry["Registry package<br/>version/channel lookup"]
-  path["Path package<br/>read local manifest"]
-  giturl["Git or URL package<br/>download source"]
-  system["System package<br/>probe host/toolchain"]
+  registry["Registry<br/>package"]
+  path["Path<br/>package"]
+  giturl["Git / URL<br/>source"]
+  system["System<br/>package"]
 
-  cache[(".pkgs/name<br/>registry/git/url cache")]
-  prebuilt{"Compatible prebuilt<br/>for target triple?"}
-  usePrebuilt["Use include/lib dirs<br/>from cached prebuilt"]
-  buildSource["Build dependency from source<br/>target/deps/name"]
-  final["Resolved include dirs,<br/>link dirs, libs, defines"]
+  cache[(".pkgs cache")]
+  prebuilt{"Prebuilt<br/>matches?"}
+  usePrebuilt["Use cached<br/>include/lib"]
+  buildSource["Build from<br/>source"]
+  final["Build flags<br/>and libs"]
 
   manifest --> active
   active --> normalize --> resolve --> source
