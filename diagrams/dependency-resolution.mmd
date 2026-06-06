@@ -1,34 +1,35 @@
-flowchart LR
-  subgraph scopes["manifest scopes"]
-    deps["[dependencies]<br/>normal build"]
-    build["[build-dependencies]<br/>tools on PATH"]
-    dev["[dev-dependencies]<br/>test/dev workflows"]
+flowchart TD
+  manifest["freight.toml"]
+
+  subgraph active["Choose active dependency edges"]
+    base["[dependencies]"]
+    build["[build-dependencies]"]
+    dev["[dev-dependencies]<br/>tests/benches/dev tools"]
+    features["selected [features]"]
+    target["matching os/arch/compiler tables"]
   end
 
-  subgraph sources["dependency sources"]
-    registry["registry"]
-    path["path"]
-    giturl["git / url"]
-    system["system"]
-  end
+  normalize["Normalize each edge<br/>name + source + requested features"]
+  resolve["Resolve versions<br/>and feature unions"]
+  source{"Source kind"}
 
-  resolver["resolver<br/>version reqs<br/>features + target cfg"]
+  registry["Registry package<br/>version/channel lookup"]
+  path["Path package<br/>read local manifest"]
+  giturl["Git or URL package<br/>download source"]
+  system["System package<br/>probe host/toolchain"]
 
-  subgraph outputs["resolved outputs"]
-    pkgs[(".pkgs/name<br/>source or prebuilt")]
-    artifacts["target/deps/name<br/>source-built output"]
-    includes["include/link dirs"]
-  end
+  cache[(".pkgs/name<br/>registry/git/url cache")]
+  prebuilt{"Compatible prebuilt<br/>for target triple?"}
+  usePrebuilt["Use include/lib dirs<br/>from cached prebuilt"]
+  buildSource["Build dependency from source<br/>target/deps/name"]
+  final["Resolved include dirs,<br/>link dirs, libs, defines"]
 
-  deps --> registry
-  deps --> path
-  build --> giturl
-  dev --> system
-  registry --> resolver
-  path --> resolver
-  giturl --> resolver
-  system --> resolver
-  resolver --> pkgs
-  resolver --> artifacts
-  pkgs --> includes
-  artifacts --> includes
+  manifest --> active
+  active --> normalize --> resolve --> source
+  source -- "registry" --> registry --> cache
+  source -- "path" --> path --> buildSource
+  source -- "git/url" --> giturl --> cache
+  source -- "system" --> system --> final
+  cache --> prebuilt
+  prebuilt -- "yes" --> usePrebuilt --> final
+  prebuilt -- "no" --> buildSource --> final

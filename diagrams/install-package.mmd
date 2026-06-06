@@ -1,15 +1,33 @@
-flowchart LR
-  release["release build<br/>target/release"]
-  install["freight install<br/>copy outputs"]
-  package["freight package<br/>stage then archive"]
-  prefix["prefix<br/>/usr/local/bin"]
-  destdir["destdir<br/>target/stage/usr"]
-  archive["archive<br/>target/package/*.tar.gz"]
-  installer["installer<br/>deb / dmg / exe"]
+flowchart TD
+  command{"Command"}
 
-  release --> install
-  release --> package
-  install --> prefix
-  install --> destdir
-  package --> archive
-  archive --> installer
+  install["freight install"]
+  installBuild{"--no-build?"}
+  buildInstall["Run freight build<br/>selected profile/target"]
+  installOutputs["Read build outputs<br/>target/profile/"]
+
+  installTree["Copy files into install layout<br/>bin/ lib/ include/"]
+  prefix["Apply --prefix<br/>example: /usr/local"]
+  destdir["Optional --destdir staging root<br/>example: target/stage"]
+  installed["Installed tree<br/>DESTDIR + prefix"]
+
+  package["freight package"]
+  packageBuild["Build selected package target"]
+  packageOutputs["Read package outputs<br/>target/profile/"]
+  stage["Create temporary package stage<br/>under target/package/"]
+  stageLayout["Copy files into staged layout<br/>bin/ lib/ include/"]
+  archive["Archive staged tree<br/>.tar.gz or .zip"]
+  native{"--installer?"}
+  installer["Native installer<br/>.deb / .dmg / .exe"]
+  artifacts["Package artifacts<br/>target/package/"]
+
+  command -- "install" --> install --> installBuild
+  installBuild -- "no" --> buildInstall --> installOutputs
+  installBuild -- "yes" --> installOutputs
+  installOutputs --> installTree
+  installTree --> prefix --> destdir --> installed
+
+  command -- "package" --> package --> packageBuild --> packageOutputs
+  packageOutputs --> stage --> stageLayout --> archive --> native
+  native -- "no" --> artifacts
+  native -- "yes" --> installer --> artifacts

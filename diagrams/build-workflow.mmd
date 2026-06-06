@@ -1,16 +1,22 @@
-flowchart LR
-  manifest["manifest<br/>freight.toml"]
-  features["features<br/>profiles<br/>target cfg"]
-  deps["resolve deps<br/>registry/path<br/>git/url/system"]
-  discover["discover<br/>sources<br/>headers/modules"]
-  compile["compile<br/>objects"]
-  link["link<br/>target/"]
+flowchart TD
+  start["freight build"]
+  manifest["Find project<br/>read freight.toml"]
+  config["Resolve build settings<br/>profile + target + features"]
+  depGraph["Resolve dependency graph"]
+  fetch["Fetch missing packages"]
+  depbuild{"Dependency has<br/>compatible prebuilt?"}
+  sourceDeps["Build source deps<br/>target/deps/name"]
+  compileDb["Write clangd database<br/>.freight/lsp/profile/compile_commands.json"]
+  sources["Discover package targets<br/>lib + bins + tests + modules"]
+  compile["Compile translation units"]
+  link["Link libraries and executables"]
+  outputs["Build outputs<br/>target/profile/"]
+  followup["freight test / run / install<br/>use built outputs"]
 
-  pkgs[(".pkgs/ cache<br/>survives clean")]
-  lsp[(".freight/lsp/dev<br/>compile_commands.json")]
-  run["freight test/run<br/>uses built outputs"]
+  pkgs[(".pkgs/name<br/>download cache")]
 
-  manifest --> features --> deps --> discover --> compile --> link
-  deps --> pkgs
-  discover --> lsp
-  link --> run
+  start --> manifest --> config --> depGraph --> fetch --> pkgs --> depbuild
+  depbuild -- "yes" --> sources
+  depbuild -- "no" --> sourceDeps --> sources
+  sources --> compileDb
+  sources --> compile --> link --> outputs --> followup

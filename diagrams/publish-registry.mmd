@@ -1,23 +1,32 @@
-flowchart LR
-  verify["verify<br/>test + package"]
-  publish["publish<br/>manifest + tarball"]
+flowchart TD
+  author["Package author"]
+  verify["Verify locally<br/>freight test + freight package"]
+  login["freight login<br/>registry token"]
+  publish["freight publish"]
+  bundle["Create upload bundle<br/>manifest + source archive + README/docs + optional prebuilts"]
 
-  subgraph registry["registry storage"]
-    metadata["metadata"]
-    source["source archive"]
-    docs["docs + README"]
-    prebuilts["prebuilts"]
+  validate["Registry validates<br/>auth + ownership + version"]
+  store["Store package version"]
+
+  subgraph stored["Registry records"]
+    metadata["Manifest metadata<br/>deps/features/targets"]
+    source["Source archive"]
+    docs["README and docs index"]
+    prebuilts["Prebuilt archives<br/>by target triple"]
   end
 
-  fetch["consumer fetch<br/>fills .pkgs/"]
-  build["consumer build<br/>uses cache/artifacts"]
+  consumer["Consumer project<br/>freight fetch/build"]
+  choose{"Compatible prebuilt<br/>available?"}
+  downloadPrebuilt["Download prebuilt<br/>to .pkgs/name"]
+  downloadSource["Download source<br/>to .pkgs/name"]
+  buildSource["Build source dependency<br/>target/deps/name"]
+  compile["Compile consumer package"]
 
-  verify --> publish
-  publish --> metadata
-  publish --> source
-  publish --> docs
-  publish --> prebuilts
-  metadata --> fetch
-  source --> fetch
-  prebuilts --> build
-  fetch --> build
+  author --> verify --> login --> publish --> bundle --> validate --> store
+  store --> metadata
+  store --> source
+  store --> docs
+  store --> prebuilts
+  metadata --> consumer --> choose
+  choose -- "yes" --> prebuilts --> downloadPrebuilt --> compile
+  choose -- "no" --> source --> downloadSource --> buildSource --> compile
