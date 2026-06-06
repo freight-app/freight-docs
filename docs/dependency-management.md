@@ -5,7 +5,7 @@ title: Dependency management
 
 Freight dependency management is manifest-first: dependency edges live in `freight.toml`, and the resolved packages are fetched into the project-local `.pkgs/` cache.
 
-<img className="process-diagram" src="/img/diagrams/dependency-resolution.svg" alt="Freight dependency resolution diagram" />
+<img className="process-diagram" src="../img/diagrams/dependency-resolution.svg" alt="Freight dependency resolution diagram" />
 
 ## Adding and removing packages
 

@@ -8,7 +8,7 @@ Freight has two related release workflows:
 - `freight install` copies build outputs into an install prefix such as `/usr/local`.
 - `freight package` builds a staged install tree and archives it for distribution.
 
-<img className="process-diagram" src="/img/diagrams/install-package.svg" alt="Freight install and package workflow diagram" />
+<img className="process-diagram" src="../img/diagrams/install-package.svg" alt="Freight install and package workflow diagram" />
 
 ## Install to a prefix
 

@@ -5,7 +5,7 @@ title: Publish packages
 
 Publishing sends the package manifest, source archive, README, and optional generated docs or prebuilts to the registry.
 
-<img className="process-diagram" src="/img/diagrams/publish-registry.svg" alt="Freight publish and registry workflow diagram" />
+<img className="process-diagram" src="../img/diagrams/publish-registry.svg" alt="Freight publish and registry workflow diagram" />
 
 ```bash
 freight login --registry https://registry.example.com

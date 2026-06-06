@@ -15,7 +15,7 @@ freight run
 
 `freight build` will fetch missing registry, Git, URL, path, and system dependencies as needed, but running `freight fetch` explicitly is useful in CI and when you want to verify dependency resolution before compiling.
 
-<img className="process-diagram" src="/img/diagrams/build-workflow.svg" alt="Freight build workflow diagram" />
+<img className="process-diagram" src="../img/diagrams/build-workflow.svg" alt="Freight build workflow diagram" />
 
 ## Project discovery
 
