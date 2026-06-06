@@ -7,7 +7,8 @@
     "build": "docusaurus build",
     "serve": "docusaurus serve build",
     "clear": "docusaurus clear",
-    "examples:terminal": "bash scripts/render-terminal-examples.sh"
+    "examples:terminal": "bash scripts/render-terminal-examples.sh",
+    "diagrams": "node scripts/render-diagrams.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "^3.7.0",

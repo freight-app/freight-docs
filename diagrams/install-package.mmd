@@ -1,0 +1,15 @@
+flowchart LR
+  release["release build<br/>target/release"]
+  install["freight install<br/>copy outputs"]
+  package["freight package<br/>stage then archive"]
+  prefix["prefix<br/>/usr/local/bin"]
+  destdir["destdir<br/>target/stage/usr"]
+  archive["archive<br/>target/package/*.tar.gz"]
+  installer["installer<br/>deb / dmg / exe"]
+
+  release --> install
+  release --> package
+  install --> prefix
+  install --> destdir
+  package --> archive
+  archive --> installer

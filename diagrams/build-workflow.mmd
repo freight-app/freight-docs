@@ -1,0 +1,16 @@
+flowchart LR
+  manifest["manifest<br/>freight.toml"]
+  features["features<br/>profiles<br/>target cfg"]
+  deps["resolve deps<br/>registry/path<br/>git/url/system"]
+  discover["discover<br/>sources<br/>headers/modules"]
+  compile["compile<br/>objects"]
+  link["link<br/>target/"]
+
+  pkgs[(".pkgs/ cache<br/>survives clean")]
+  lsp[(".freight/lsp/dev<br/>compile_commands.json")]
+  run["freight test/run<br/>uses built outputs"]
+
+  manifest --> features --> deps --> discover --> compile --> link
+  deps --> pkgs
+  discover --> lsp
+  link --> run

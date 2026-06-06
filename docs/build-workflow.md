@@ -15,6 +15,8 @@ freight run
 
 `freight build` will fetch missing registry, Git, URL, path, and system dependencies as needed, but running `freight fetch` explicitly is useful in CI and when you want to verify dependency resolution before compiling.
 
+<img className="process-diagram" src="/img/diagrams/build-workflow.svg" alt="Freight build workflow diagram" />
+
 ## Project discovery
 
 Commands can be run from any directory under a package. Freight walks up until it finds `freight.toml`. In a workspace, build/test/run commands can select one member with `-p`:
@@ -32,6 +34,21 @@ The manifest decides which sources belong to the build:
 - Language sections such as `[language.cpp]` select standards and language behavior.
 - `[compiler]` contributes shared backend, defines, includes, warnings, and flags.
 - Feature and platform sections are merged for the selected build.
+
+## Build stages
+
+The build pipeline is intentionally split into stages so each stage can be inspected and reused by IDEs, package publishing, and CI:
+
+1. **Load manifest**: find the package or workspace root and parse `freight.toml`.
+2. **Resolve settings**: merge profile, target, feature, OS, architecture, compiler, and language sections.
+3. **Fetch dependencies**: fill `.pkgs/` from registries, Git, URLs, path dependencies, or system packages.
+4. **Resolve graph**: topologically order dependency packages and detect version or feature conflicts.
+5. **Discover sources**: collect library sources, public headers, binaries, tests, benches, generated sources, and module units.
+6. **Prepare toolchain**: select compiler templates and assemble include/link flags.
+7. **Build dependencies**: build source dependencies into `target/deps/<name>/` when no compatible prebuilt is available.
+8. **Compile package**: compile ordinary translation units, C++ module interfaces, implementation units, and generated sources.
+9. **Link outputs**: produce libraries, binaries, tests, and benches under `target/<profile>/`.
+10. **Emit metadata**: refresh `.freight/lsp/<profile>/compile_commands.json` for editor tooling.
 
 ## Profiles and features
 
@@ -68,6 +85,15 @@ Freight keeps downloaded package content and compiled artifacts separate:
 
 `freight clean` removes `target/` but leaves `.pkgs/` intact so dependency downloads survive clean builds.
 
+| Path | Owner | Purpose |
+|---|---|---|
+| `.pkgs/` | fetch stage | Downloaded or unpacked dependency packages. |
+| `.freight/lsp/<profile>/` | LSP stage | Editor-facing compile database and language-server metadata. |
+| `target/dev/` | build stage | Debug-profile objects, libraries, and binaries. |
+| `target/release/` | build stage | Release-profile objects, libraries, and binaries. |
+| `target/deps/<name>/` | dependency source builds | Artifacts built from source dependencies for the root package. |
+| `target/package/` | packaging | Archives, staged installs, and native installer outputs. |
+
 ## Inspecting the build graph
 
 Use graph output to see package and target order before compiling:
@@ -79,6 +105,13 @@ freight build --graph --graph-format dot
 ```
 
 For C++20 modules, Freight topologically sorts module interface units before compiling implementation units and ordinary translation units. Cycles are reported as module dependency errors.
+
+Graph output is useful in code review and CI logs because it explains ordering decisions without requiring a verbose build:
+
+```bash
+freight build --graph --graph-format mermaid > build-graph.mmd
+freight build --graph --graph-format dot > build-graph.dot
+```
 
 ## Timing and troubleshooting
 

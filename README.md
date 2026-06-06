@@ -14,6 +14,13 @@ Terminal examples are generated from VHS tapes and asciinema scenarios:
 bun run examples:terminal
 ```
 
+Process diagrams are authored as Mermaid files in `diagrams/` and rendered to
+SVG files in `static/img/diagrams/`:
+
+```sh
+bun run diagrams
+```
+
 The build output is written to `build/` and published through GitHub Pages.
 
 Public site:

@@ -1,0 +1,23 @@
+flowchart LR
+  verify["verify<br/>test + package"]
+  publish["publish<br/>manifest + tarball"]
+
+  subgraph registry["registry storage"]
+    metadata["metadata"]
+    source["source archive"]
+    docs["docs + README"]
+    prebuilts["prebuilts"]
+  end
+
+  fetch["consumer fetch<br/>fills .pkgs/"]
+  build["consumer build<br/>uses cache/artifacts"]
+
+  verify --> publish
+  publish --> metadata
+  publish --> source
+  publish --> docs
+  publish --> prebuilts
+  metadata --> fetch
+  source --> fetch
+  prebuilts --> build
+  fetch --> build

@@ -42,6 +42,11 @@ const config = {
     },
     navbar: {
       title: 'Freight',
+      logo: {
+        alt: 'Freight',
+        src: 'img/favicon.svg',
+        href: 'https://freight-app.github.io/',
+      },
       items: [
         { type: 'docSidebar', sidebarId: 'guideSidebar', position: 'left', label: 'Guide' },
         { to: '/install/', label: 'Install', position: 'left' },

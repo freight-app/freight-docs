@@ -1,0 +1,34 @@
+flowchart LR
+  subgraph scopes["manifest scopes"]
+    deps["[dependencies]<br/>normal build"]
+    build["[build-dependencies]<br/>tools on PATH"]
+    dev["[dev-dependencies]<br/>test/dev workflows"]
+  end
+
+  subgraph sources["dependency sources"]
+    registry["registry"]
+    path["path"]
+    giturl["git / url"]
+    system["system"]
+  end
+
+  resolver["resolver<br/>version reqs<br/>features + target cfg"]
+
+  subgraph outputs["resolved outputs"]
+    pkgs[(".pkgs/name<br/>source or prebuilt")]
+    artifacts["target/deps/name<br/>source-built output"]
+    includes["include/link dirs"]
+  end
+
+  deps --> registry
+  deps --> path
+  build --> giturl
+  dev --> system
+  registry --> resolver
+  path --> resolver
+  giturl --> resolver
+  system --> resolver
+  resolver --> pkgs
+  resolver --> artifacts
+  pkgs --> includes
+  artifacts --> includes
